@@ -895,7 +895,7 @@ int diag_process_apps_pkt(unsigned char *buf, int len, int pid)
 		return -EIO;
 
 	/* Check if the command is a supported mask command */
-	mask_ret = diag_process_apps_masks(buf, len, pid);
+	mask_ret = diag_process_apps_masks(buf, len, info);
 	if (mask_ret > 0) {
 		diag_send_rsp(driver->apps_rsp_buf, mask_ret);
 		return 0;

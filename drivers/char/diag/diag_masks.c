@@ -1968,11 +1968,6 @@ int diag_copy_to_user_msg_mask(char __user *buf, size_t count,
 	if (!mask_info)
 		return -EIO;
 
-	if (!mask_info->ptr || !mask_info->update_buf) {
-		pr_err("diag: In %s, invalid input mask_info->ptr: %pK, mask_info->update_buf: %pK\n",
-			__func__, mask_info->ptr, mask_info->update_buf);
-		return -EINVAL;
-	}
 	mutex_lock(&driver->diag_maskclear_mutex);
 	if (driver->mask_clear) {
 		DIAG_LOG(DIAG_DEBUG_PERIPHERALS,
@@ -1981,6 +1976,7 @@ int diag_copy_to_user_msg_mask(char __user *buf, size_t count,
 		return -EIO;
 	}
 	mutex_unlock(&driver->diag_maskclear_mutex);
+
 	mutex_lock(&mask_info->lock);
 	mutex_lock(&driver->msg_mask_lock);
 
@@ -2118,12 +2114,14 @@ void diag_send_updates_peripheral(uint8_t peripheral)
 				&driver->buffering_mode[peripheral]);
 }
 
-int diag_process_apps_masks(unsigned char *buf, int len, int pid)
+int diag_process_apps_masks(unsigned char *buf, int len,
+			    struct diag_md_session_t *info)
 {
 	int size = 0;
 	int sub_cmd = 0;
 	int (*hdlr)(unsigned char *src_buf, int src_len,
-		    unsigned char *dest_buf, int dest_len, int pid) = NULL;
+		    unsigned char *dest_buf, int dest_len,
+		    struct diag_md_session_t *info) = NULL;
 
 	if (!buf || len <= 0)
 		return -EINVAL;
@@ -2173,7 +2171,7 @@ int diag_process_apps_masks(unsigned char *buf, int len, int pid)
 
 	if (hdlr)
 		size = hdlr(buf, len, driver->apps_rsp_buf,
-			    DIAG_MAX_RSP_SIZE, pid);
+			    DIAG_MAX_RSP_SIZE, info);
 
 	return (size > 0) ? size : 0;
 }

@@ -398,7 +398,7 @@ static uint32_t diag_translate_kernel_to_user_mask(uint32_t peripheral_mask)
 	return ret;
 }
 
-void diag_clear_masks(int pid)
+void diag_clear_masks(struct diag_md_session_t *info)
 {
 	int ret;
 	char cmd_disable_log_mask[] = { 0x73, 0, 0, 0, 0, 0, 0, 0};
@@ -407,14 +407,14 @@ void diag_clear_masks(int pid)
 
 	DIAG_LOG(DIAG_DEBUG_PERIPHERALS,
 	"diag: %s: masks clear request upon %s\n", __func__,
-	((pid) ? "ODL exit" : "USB Disconnection"));
+	((info) ? "ODL exit" : "USB Disconnection"));
 
 	ret = diag_process_apps_masks(cmd_disable_log_mask,
-			sizeof(cmd_disable_log_mask), pid);
+			sizeof(cmd_disable_log_mask), info);
 	ret = diag_process_apps_masks(cmd_disable_msg_mask,
-			sizeof(cmd_disable_msg_mask), pid);
+			sizeof(cmd_disable_msg_mask), info);
 	ret = diag_process_apps_masks(cmd_disable_event_mask,
-			sizeof(cmd_disable_event_mask), pid);
+			sizeof(cmd_disable_event_mask), info);
 	DIAG_LOG(DIAG_DEBUG_PERIPHERALS,
 	"diag:%s: masks cleared successfully\n", __func__);
 }
@@ -435,13 +435,12 @@ static void diag_close_logging_process(const int pid)
 	session_peripheral_mask = session_info->peripheral_mask;
 	mutex_unlock(&driver->md_session_lock);
 
-	diag_clear_masks(pid);
+	diag_clear_masks(session_info);
 
 	mutex_lock(&driver->diag_maskclear_mutex);
 	driver->mask_clear = 1;
 	mutex_unlock(&driver->diag_maskclear_mutex);
 
-	mutex_lock(&driver->diagchar_mutex);
 	session_peripheral_mask = session_info->peripheral_mask;
 	for (i = 0; i < NUM_MD_SESSIONS; i++)
 		if (MD_PERIPHERAL_MASK(i) & session_peripheral_mask)

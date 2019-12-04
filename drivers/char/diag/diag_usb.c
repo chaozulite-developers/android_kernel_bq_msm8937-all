@@ -219,7 +219,7 @@ static void usb_disconnect(struct diag_usb_info *ch)
 		return;
 
 	if (!atomic_read(&ch->connected) && driver->usb_connected)
-		diag_clear_masks(0);
+		diag_clear_masks(NULL);
 
 	if (ch && ch->ops && ch->ops->close)
 		ch->ops->close(ch->ctxt, DIAG_USB_MODE);
