@@ -2256,6 +2256,15 @@ static int qpnp_pon_probe(struct spmi_device *spmi)
 			"Unable to get PON debounce delay rc=%d\n", rc);
 		return rc;
 	}
+	rc = qpnp_pon_get_dbc(pon, &pon->dbc_time_us);
+	if (rc) {
+		dev_err(&spmi->dev,
+			"Unable to get PON debounce delay rc=%d\n", rc);
+		return rc;
+	}
+
+	pon->kpdpwr_dbc_enable = of_property_read_bool(pon->spmi->dev.of_node,
+					"qcom,kpdpwr-sw-debounce");
 
 	pon->kpdpwr_dbc_enable = of_property_read_bool(pon->spmi->dev.of_node,
 					"qcom,kpdpwr-sw-debounce");
