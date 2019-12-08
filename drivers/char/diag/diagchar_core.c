@@ -1,4 +1,4 @@
-/* Copyright (c) 2008-2018, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2008-2017, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -2568,6 +2568,7 @@ static int diag_user_process_raw_data(const char __user *buf, int len)
 	int remote_proc = 0;
 	const int mempool = POOL_TYPE_COPY;
 	unsigned char *user_space_data = NULL;
+	struct diag_md_session_t *info = NULL;
 
 	if (!buf || len <= 0 || len > CALLBACK_BUF_SIZE) {
 		pr_err_ratelimited("diag: In %s, invalid buf %pK len: %d\n",
@@ -2618,8 +2619,8 @@ static int diag_user_process_raw_data(const char __user *buf, int len)
 	} else {
 		wait_event_interruptible(driver->wait_q,
 					 (driver->in_busy_pktdata == 0));
-		ret = diag_process_apps_pkt(user_space_data, len,
-			current->tgid);
+		info = diag_md_session_get_pid(current->tgid);
+		ret = diag_process_apps_pkt(user_space_data, len, info);
 		if (ret == 1)
 			diag_send_error_rsp((void *)(user_space_data), len);
 	}
@@ -2701,11 +2702,11 @@ static int diag_user_process_userspace_data(const char __user *buf, int len)
 		if (!hdlc_disabled)
 			diag_process_hdlc_pkt((void *)
 				(driver->user_space_data_buf),
-				len, current->tgid);
+				len, session_info);
 		else
 			diag_process_non_hdlc_pkt((char *)
 						(driver->user_space_data_buf),
-						len, current->tgid);
+						len, session_info);
 		return 0;
 	}
 
@@ -3486,6 +3487,7 @@ static int __init diagchar_init(void)
 	mutex_init(&driver->delayed_rsp_mutex);
 	mutex_init(&apps_data_mutex);
 	mutex_init(&driver->msg_mask_lock);
+	mutex_init(&driver->hdlc_recovery_mutex);
 	for (i = 0; i < NUM_PERIPHERALS; i++)
 		mutex_init(&driver->diagfwd_channel_mutex[i]);
 	init_waitqueue_head(&driver->wait_q);
