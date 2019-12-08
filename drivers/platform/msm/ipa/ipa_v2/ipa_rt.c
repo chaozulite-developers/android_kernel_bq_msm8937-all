@@ -980,7 +980,7 @@ static int __ipa_del_rt_tbl(struct ipa_rt_tbl *entry)
 	u32 id;
 
 	if (entry == NULL || (entry->cookie != IPA_RT_TBL_COOKIE)) {
-		IPAERR("bad parms\n");
+		IPAERR_RL("bad parms\n");
 		return -EINVAL;
 	}
 	id = entry->id;
@@ -1168,7 +1168,7 @@ int __ipa_del_rt_rule(u32 rule_hdl)
 	}
 
 	if (entry->cookie != IPA_RT_RULE_COOKIE) {
-		IPAERR("bad params\n");
+		IPAERR_RL("bad params\n");
 		return -EINVAL;
 	}
 
@@ -1431,7 +1431,7 @@ int ipa2_get_rt_tbl(struct ipa_ioc_get_rt_tbl *lookup)
 	entry = __ipa_find_rt_tbl(lookup->ip, lookup->name);
 	if (entry && entry->cookie == IPA_RT_TBL_COOKIE) {
 		if (entry->ref_cnt == U32_MAX) {
-			IPAERR("fail: ref count crossed limit\n");
+			IPAERR_RL("fail: ref count crossed limit\n");
 			goto ret;
 		}
 		entry->ref_cnt++;
@@ -1473,7 +1473,7 @@ int ipa2_put_rt_tbl(u32 rt_tbl_hdl)
 	}
 
 	if ((entry->cookie != IPA_RT_TBL_COOKIE) || entry->ref_cnt == 0) {
-		IPAERR("bad parms\n");
+		IPAERR_RL("bad parms\n");
 		result = -EINVAL;
 		goto ret;
 	}
@@ -1515,7 +1515,7 @@ static int __ipa_mdfy_rt_rule(struct ipa_rt_rule_mdfy *rtrule)
 	if (rtrule->rule.hdr_hdl) {
 		hdr = ipa_id_find(rtrule->rule.hdr_hdl);
 		if ((hdr == NULL) || (hdr->cookie != IPA_HDR_COOKIE)) {
-			IPAERR("rt rule does not point to valid hdr\n");
+			IPAERR_RL("rt rule does not point to valid hdr\n");
 			goto error;
 		}
 	}
@@ -1527,7 +1527,7 @@ static int __ipa_mdfy_rt_rule(struct ipa_rt_rule_mdfy *rtrule)
 	}
 
 	if (entry->cookie != IPA_RT_RULE_COOKIE) {
-		IPAERR("bad params\n");
+		IPAERR_RL("bad params\n");
 		goto error;
 	}
 

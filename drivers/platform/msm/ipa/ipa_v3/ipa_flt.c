@@ -1279,7 +1279,7 @@ static int __ipa_del_flt_rule(u32 rule_hdl)
 	}
 
 	if (entry->cookie != IPA_FLT_COOKIE) {
-		IPAERR("bad params\n");
+		IPAERR_RL("bad params\n");
 		return -EINVAL;
 	}
 	id = entry->id;
@@ -1316,7 +1316,7 @@ static int __ipa_mdfy_flt_rule(struct ipa_flt_rule_mdfy *frule,
 	}
 
 	if (entry->cookie != IPA_FLT_COOKIE) {
-		IPAERR("bad params\n");
+		IPAERR_RL("bad params\n");
 		goto error;
 	}
 
@@ -1337,7 +1337,7 @@ static int __ipa_mdfy_flt_rule(struct ipa_flt_rule_mdfy *frule,
 			}
 
 			if (rt_tbl->cookie != IPA_RT_TBL_COOKIE) {
-				IPAERR("RT table cookie is invalid\n");
+				IPAERR_RL("RT table cookie is invalid\n");
 				goto error;
 			}
 		} else {
@@ -1498,13 +1498,6 @@ int ipa3_add_flt_rule_after(struct ipa_ioc_add_flt_rule_after *rules)
 	entry = ipa3_id_find(rules->add_after_hdl);
 	if (entry == NULL) {
 		IPAERR_RL("lookup failed\n");
-		result = -EINVAL;
-		goto bail;
-	}
-
-	if (entry->cookie != IPA_FLT_COOKIE) {
-		IPAERR_RL("Invalid cookie value =  %u flt hdl id = %d\n",
-			entry->cookie, rules->add_after_hdl);
 		result = -EINVAL;
 		goto bail;
 	}
