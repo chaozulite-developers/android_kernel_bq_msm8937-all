@@ -14,7 +14,6 @@
 /dts-v1/;
 
 #include "sdm450.dtsi"
-<<<<<<< HEAD
 #include "msm-pmi8950.dtsi"
 
 / {
@@ -65,12 +64,3 @@
 		qcom,supply-post-on-sleep = <10>;
 	};
 };
-=======
-#include "msm8953-qrd-sku3.dtsi"
-
-/ {
-	model = "Qualcomm Technologies, Inc. SDM450 QRD";
-	compatible = "qcom,sdm450-qrd", "qcom,sdm450", "qcom,qrd";
-	qcom,board-id = <0x0005000b 0>;
-};
->>>>>>> LA.UM.5.6.r1-05100-89xx.0
