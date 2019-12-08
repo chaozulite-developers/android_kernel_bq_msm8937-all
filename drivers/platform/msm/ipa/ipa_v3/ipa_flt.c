@@ -1279,7 +1279,7 @@ static int __ipa_del_flt_rule(u32 rule_hdl)
 	}
 
 	if (entry->cookie != IPA_FLT_COOKIE) {
-		IPAERR_RL("bad params\n");
+		IPAERR("bad params\n");
 		return -EINVAL;
 	}
 	id = entry->id;
@@ -1316,7 +1316,7 @@ static int __ipa_mdfy_flt_rule(struct ipa_flt_rule_mdfy *frule,
 	}
 
 	if (entry->cookie != IPA_FLT_COOKIE) {
-		IPAERR_RL("bad params\n");
+		IPAERR("bad params\n");
 		goto error;
 	}
 
@@ -1337,7 +1337,7 @@ static int __ipa_mdfy_flt_rule(struct ipa_flt_rule_mdfy *frule,
 			}
 
 			if (rt_tbl->cookie != IPA_RT_TBL_COOKIE) {
-				IPAERR_RL("RT table cookie is invalid\n");
+				IPAERR("RT table cookie is invalid\n");
 				goto error;
 			}
 		} else {

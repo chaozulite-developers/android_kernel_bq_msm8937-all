@@ -333,7 +333,7 @@ static int __ipa_add_hdr_proc_ctx(struct ipa_hdr_proc_ctx_add *proc_ctx,
 
 	hdr_entry = ipa3_id_find(proc_ctx->hdr_hdl);
 	if (!hdr_entry || (hdr_entry->cookie != IPA_HDR_COOKIE)) {
-		IPAERR_RL("hdr_hdl is invalid\n");
+		IPAERR("hdr_hdl is invalid\n");
 		return -EINVAL;
 	}
 
@@ -592,7 +592,7 @@ static int __ipa3_del_hdr_proc_ctx(u32 proc_ctx_hdl,
 
 	entry = ipa3_id_find(proc_ctx_hdl);
 	if (!entry || (entry->cookie != IPA_PROC_HDR_COOKIE)) {
-		IPAERR_RL("bad parm\n");
+		IPAERR("bad parm\n");
 		return -EINVAL;
 	}
 
@@ -643,7 +643,7 @@ int __ipa3_del_hdr(u32 hdr_hdl, bool by_user)
 	}
 
 	if (entry->cookie != IPA_HDR_COOKIE) {
-		IPAERR_RL("bad parm\n");
+		IPAERR("bad parm\n");
 		return -EINVAL;
 	}
 
@@ -1202,7 +1202,7 @@ int ipa3_put_hdr(u32 hdr_hdl)
 	}
 
 	if (entry->cookie != IPA_HDR_COOKIE) {
-		IPAERR_RL("invalid header entry\n");
+		IPAERR("invalid header entry\n");
 		result = -EINVAL;
 		goto bail;
 	}
