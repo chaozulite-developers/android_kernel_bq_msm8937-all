@@ -90,7 +90,7 @@ static ssize_t rsc_ops_write(struct file *fp, const char __user *user_buffer,
 		cmp += pos;
 		if (sscanf(cmp, "%5s %n", key_str, &pos) != 1) {
 			pr_err("Invalid number of arguments passed\n");
-			goto err;
+			goto err_request;
 		}
 
 		if (strlen(key_str) > 4) {
@@ -106,7 +106,7 @@ static ssize_t rsc_ops_write(struct file *fp, const char __user *user_buffer,
 		cmp += pos;
 		if (sscanf(cmp, "%u %n", &data, &pos) != 1) {
 			pr_err("Invalid number of arguments passed\n");
-			goto err;
+			goto err_request;
 		}
 
 		if (msm_rpm_add_kvp_data(req, key,
